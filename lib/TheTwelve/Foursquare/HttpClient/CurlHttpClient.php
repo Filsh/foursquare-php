@@ -33,6 +33,12 @@ class CurlHttpClient extends HttpClientAdapter
     protected $certificatePath;
 
     /**
+     * The name of a locale
+     * @var string
+     */
+    protected $locale = 'en';
+    
+    /**
      *
      *
      * @param string $certificatePath
@@ -64,6 +70,11 @@ class CurlHttpClient extends HttpClientAdapter
 
         $this->verifyHost = $value;
 
+    }
+    
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 
     /**
@@ -103,12 +114,17 @@ class CurlHttpClient extends HttpClientAdapter
     protected function initCurlHandler($uri)
     {
 
+        $headers = array(
+            sprintf('Accept-Language: %s', $this->locale)
+        );
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);
         curl_setopt($ch, CURLOPT_USERAGENT, 'twelvelabs/foursquare client');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->verifyHost);
-
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        
         if ($this->verifyPeer === false) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         } else {

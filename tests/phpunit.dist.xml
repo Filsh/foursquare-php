@@ -1,7 +1,7 @@
 <phpunit bootstrap="./bootstrap.php">
 
     <php>
-        <includePath></includePath>
+        <includePath>.</includePath>
         <get name="clientId" value=""/>
         <get name="clientSecret" value=""/>
         <get name="authorizeUri" value=""/>
