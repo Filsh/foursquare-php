@@ -5,8 +5,9 @@ Yii::setPathOfAlias('TheTwelve', realpath(dirname(__FILE__) . '/lib/TheTwelve'))
 use TheTwelve\Foursquare\ApiGatewayFactory;
 use TheTwelve\Foursquare\HttpClient\CurlHttpClient;
 use TheTwelve\Foursquare\Redirector\HeaderRedirector;
+use TheTwelve\Foursquare\Cache\CacheAdapter;
 
-class FoursquareApi extends CApplicationComponent
+class FoursquareComponent extends CApplicationComponent
 {
     public $clientId;
     
@@ -18,14 +19,19 @@ class FoursquareApi extends CApplicationComponent
     
     public $defaultLocale = 'en';
     
+    public $cacheEnable = false;
+    
+    public $cacheID;
+    
     private $_factory;
     private $_httpClient;
     private $_headerRedirector;
+    private $_cacheAdapter;
     
     public function getFactory()
     {
         if($this->_factory === null) {
-            $this->_factory = new ApiGatewayFactory($this->getHttpClient(), $this->getHeaderRedirector());
+            $this->_factory = new ApiGatewayFactory($this->getHttpClient(), $this->getHeaderRedirector(), $this->getCacheAdapter());
             $this->_factory->setClientCredentials($this->clientId, $this->clientSecret);
             $this->_factory->setEndpointUri($this->endpointUri);
             $this->_factory->useVersion($this->versionApi);
@@ -52,6 +58,16 @@ class FoursquareApi extends CApplicationComponent
         }
         
         return $this->_headerRedirector;
+    }
+    
+    public function getCacheAdapter()
+    {
+        if($this->_cacheAdapter === null && $this->cacheEnable && $this->cacheID) {
+            $cache = Yii::app()->getComponent($this->cacheID);
+            $this->_cacheAdapter = new CacheAdapter($cache);
+        }
+        
+        return $this->_cacheAdapter;
     }
     
     public function setLocale($locale)

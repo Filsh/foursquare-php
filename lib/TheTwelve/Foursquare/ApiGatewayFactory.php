@@ -29,15 +29,18 @@ class ApiGatewayFactory
     /** @var string */
     protected $clientSecret;
 
+    protected $cache;
+    
     /**
      * initialize the gateway
      * @param \TheTwelve\Foursquare\HttpClient $httpClient
      */
-    public function __construct(HttpClient $httpClient, Redirector $redirector = null)
+    public function __construct(HttpClient $httpClient, Redirector $redirector = null, Cache $cache = null)
     {
 
         $this->httpClient = $httpClient;
         $this->redirector = $redirector;
+        $this->cache = $cache;
 
     }
 
@@ -232,7 +235,8 @@ class ApiGatewayFactory
 
         $gateway->setRequestUri($this->getRequestUri())
                 ->setToken($this->token)
-                ->setClientCredentials($this->clientId, $this->clientSecret);
+                ->setClientCredentials($this->clientId, $this->clientSecret)
+                ->setCache($this->cache);
 
     }
 

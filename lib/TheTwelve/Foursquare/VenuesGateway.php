@@ -62,10 +62,10 @@ class VenuesGateway extends EndpointGateway
      * @param array $params
      * @return array
      */
-    public function search(array $params = array())
+    public function search(array $params = array(), $expire = null, $dependency = null)
     {
         $resource = '/venues/search';
-        $response = $this->makeApiRequest($resource, $params);
+        $response = $this->makeApiRequest($resource, $params, EndpointGateway::METHOD_GET, $expire, $dependency);
 
         if(property_exists($response, 'venues')) {
             return $response->venues;

@@ -6,7 +6,4 @@ use TheTwelve\Foursquare\HttpClient;
 
 abstract class HttpClientAdapter implements HttpClient
 {
-
-
-
 }
